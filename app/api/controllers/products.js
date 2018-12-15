@@ -33,7 +33,9 @@ module.exports = {
                         till: product.till
                     });
 				}
-				res.json({status:"success", message: "Products list found!!!", data:{products: productsList}});
+
+				res.send(201,productsList);
+				// res.json({status:"success", message: "Products list found!!!", data:{products: productsList}});
 			}
 
 		});
@@ -75,7 +77,6 @@ module.exports = {
 				  	next(err);
 				  else
 				  	res.json({status: "success", message: "Product added successfully!!!", data: null});
-
 				});
 	},
 }

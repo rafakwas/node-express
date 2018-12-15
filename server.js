@@ -1,11 +1,13 @@
 const express = require('express');
 const logger = require('morgan');
+var cors = require('cors');
 const users = require('./routes/users');
 const products = require('./routes/products');
 const orders = require('./routes/orders');
 const bodyParser = require('body-parser');
 const mongoose = require('./config/database'); //database configuration
 const app = express();
+app.use(cors());
 
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 

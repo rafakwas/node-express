@@ -1,7 +1,6 @@
-console.log('in db config');
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb://localhost/shop';
-mongoose.connect(mongoDB);
+mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 
 module.exports = mongoose;

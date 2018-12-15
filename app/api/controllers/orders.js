@@ -3,20 +3,85 @@
 const orderModel = require('../models/orders');
 
 module.exports = {
-	getById: function(req, res, next) {
-		console.log(req.body);
-		orderModel.findById(req.params.orderId, function(err, orderInfo){
+	getByOrderStatus: function(req, res, next) {
+        let ordersList = [];
+        orderModel.find({status : req.params.status}, function(err, orders){
 			if (err) {
 				next(err);
 			} else {
-				res.json({status:"success", message: "Order found!!!", data:{orders: orderInfo}});
+                for (let order of orders) {
+                    ordersList.push({
+                        id: order._id,
+                        userId: order.userId,
+                        firstname: order.firstname,
+                        lastname: order.lastname,
+                        email: order.email,
+                        address: order.address,
+                        postalCode: order.postalCode,
+                        city: order.city,
+                        phone: order.phone,
+                        totalPrice: order.totalPrice,
+                        status: order.status,
+                        products: order.products
+                    });
+                }
+                res.status(201).send(ordersList);
+			}
+		});
+	},
+
+	getByUserId: function(req, res, next) {
+        let ordersList = [];
+        orderModel.find({userId : req.params.id}, function(err, orders){
+			if (err) {
+				next(err);
+			} else {
+                for (let order of orders) {
+                    ordersList.push({
+                        id: order._id,
+                        userId: order.userId,
+                        firstname: order.firstname,
+                        lastname: order.lastname,
+                        email: order.email,
+                        address: order.address,
+                        postalCode: order.postalCode,
+                        city: order.city,
+                        phone: order.phone,
+                        totalPrice: order.totalPrice,
+                        status: order.status,
+                        products: order.products
+                    });
+                }
+                res.status(201).send(ordersList);
+			}
+		});
+	},
+
+	getById: function(req, res, next) {
+		orderModel.findById(req.params.id, function(err, order){
+			if (err) {
+				next(err);
+			} else {
+				res.status(201).send({
+                    id: order._id,
+                    userId: order.userId,
+                    firstname: order.firstname,
+                    lastname: order.lastname,
+                    email: order.email,
+                    address: order.address,
+                    postalCode: order.postalCode,
+                    city: order.city,
+                    phone: order.phone,
+                    totalPrice: order.totalPrice,
+                    status: order.status,
+                    products: order.products
+                });
 			}
 		});
 	},
 
 	getAll: function(req, res, next) {
 		let ordersList = [];
-
 		orderModel.find({}, function(err, orders){
 			if (err){
 				next(err);
@@ -37,16 +102,16 @@ module.exports = {
                         products: order.products
 					});
 				}
-				res.json({status:"success", message: "Orders list found!!!", data:{orders: ordersList}});
-
+				res.status(201).send(ordersList);
 			}
-
 		});
 	},
 
 	updateById: function(req, res, next) {
-		orderModel.findByIdAndUpdate(req.params.orderId,{name:req.body.name}, function(err, orderInfo){
-
+		orderModel.findByIdAndUpdate(req.params.id,{
+			status : req.body.status,
+			products : req.body.products
+		}, function(err, orderInfo){
 			if(err)
 				next(err);
 			else {

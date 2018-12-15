@@ -3,8 +3,10 @@ const router = express.Router();
 const orderController = require('../app/api/controllers/orders');
 
 router.get('/', orderController.getAll);
+router.get('/:id', orderController.getById);
 router.post('/', orderController.create);
-router.get('/:orderId', orderController.getById);
-router.put('/:orderId', orderController.updateById);
+router.get('/status/:status', orderController.getByOrderStatus);
+router.get('/user/:id', orderController.getByUserId);
+router.put('/:id', orderController.updateById);
 
 module.exports = router;
