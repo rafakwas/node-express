@@ -57,12 +57,31 @@ module.exports = {
 		});
 	},
 
-	getById: function(req, res, next) {
-		orderModel.findById(req.params.id, function(err, order){
-			if (err) {
-				next(err);
-			} else {
-				res.status(201).send({
+    getById: function (req, res, next) {
+        let orderProducts = [];
+        orderModel.findById(req.params.id, function (err, order) {
+            if (err) {
+                next(err);
+            } else {
+                for (let orderProduct of order.products) {
+                    orderProducts.push({
+                        id: orderProduct.id,
+                        isChecked: orderProduct.isChecked,
+                        product: {
+                            id: orderProduct.product.id,
+                            name: orderProduct.product.name,
+                            category: orderProduct.product.category,
+                            price:orderProduct.product.price,
+                            description:orderProduct.product.description,
+                            imageUrl:orderProduct.product.imageUrl,
+                            productAdded:orderProduct.product.productAdded,
+                            quantity:orderProduct.product.quantity,
+                            bargain:orderProduct.product.bargain,
+                            till:orderProduct.product.till
+                        }
+                    });
+                }
+                res.status(201).send({
                     id: order._id,
                     userId: order.userId,
                     firstname: order.firstname,
@@ -74,13 +93,14 @@ module.exports = {
                     phone: order.phone,
                     totalPrice: order.totalPrice,
                     status: order.status,
-                    products: order.products
+                    products: orderProducts
                 });
-			}
-		});
-	},
+            }
+        });
+    },
 
-	getAll: function(req, res, next) {
+
+    getAll: function(req, res, next) {
 		let ordersList = [];
 		orderModel.find({}, function(err, orders){
 			if (err){
@@ -119,7 +139,7 @@ module.exports = {
 			}
 		});
 	},
-    
+
 	create: function(req, res, next) {
 		orderModel.create({
             userId: req.body.userId,

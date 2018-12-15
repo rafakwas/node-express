@@ -3,11 +3,11 @@ const productModel = require('../models/products');
 module.exports = {
 	getById: function(req, res, next) {
 		console.log(req.body);
-		productModel.findById(req.params.productId, function(err, productInfo){
+		productModel.findById(req.params.productId, function(err, product){
 			if (err) {
 				next(err);
 			} else {
-				res.json({status:"success", message: "Product found!!!", data:{products: productInfo}});
+				res.send(201,product);
 			}
 		});
 	},
