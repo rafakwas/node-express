@@ -1,4 +1,5 @@
 const productModel = require('../models/products');
+const server = require('../../../server');
 
 module.exports = {
 	getById: function(req, res, next) {
@@ -14,7 +15,6 @@ module.exports = {
 
 	getAll: function(req, res, next) {
 		let productsList = [];
-
 		productModel.find({}, function(err, products){
 			if (err){
 				next(err);
@@ -42,6 +42,7 @@ module.exports = {
 	},
 
 	updateById: function(req, res, next) {
+		server.emit("Aktualizacja produktu - sprawdź co Cię czeka: " + req.body.name);
 		productModel.findByIdAndUpdate(req.params.productId,{
             name: req.body.name,
             category: req.body.category,
@@ -62,6 +63,7 @@ module.exports = {
 	},
 
 	create: function(req, res, next) {
+		server.emit("Dodano nowy produkt: " + req.body.name);
 		productModel.create({
             name: req.body.name,
             category: req.body.category,

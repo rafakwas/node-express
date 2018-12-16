@@ -7,6 +7,8 @@ const orders = require('./routes/orders');
 const bodyParser = require('body-parser');
 const mongoose = require('./config/database'); //database configuration
 const app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 app.use(cors());
 
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -39,6 +41,16 @@ app.use(function(err, req, res, next) {
 
 });
 
-app.listen(3000, function(){
+io.on('connection', function() {
+    console.log('Client connected...');
+    // io.emit("message", { content : "Socket IO zestawione połączenie" });
+});
+
+module.exports.emit = function (msg) {
+    console.log('Emiting info...' + msg);
+    io.emit("message", { content : msg });
+};
+
+server.listen(3000, function(){
     console.log('Node server listening on port 3000');
 });
